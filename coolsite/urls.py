@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf.urls.static import static
 
 from coolsite import settings
@@ -24,14 +25,22 @@ from women.views import pageNotFound
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('women.urls')),
+    path('captcha/', include('captcha.urls')),
 ]
 
 if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
     # В процессе отладки сайта, то есть, когда мы используем
     # отладочный веб-сервер, нужно сэмулировать работу
     # реального сервера для получения ранее загруженных
     # файлов и передачи их нашему приложению.
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
     # к уже существующим маршрутам добавляем еще один маршрут
     # для статических данных – графических файлов, указывая
     # вначале URL, а затем, корневую папку, где они будут храниться.

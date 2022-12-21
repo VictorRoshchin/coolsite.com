@@ -1,0 +1,30 @@
+{% extends 'women/base.html' %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+
+<!--Указываем через атрибут action ее обработчик-->
+<!--(в данном случае – это тот же адрес страницы, и связанная с ним функция представления addpage)-->
+<!--Атрибут method указывает способ передачи информации на сервер (используется POST-запрос)-->
+<!--В случае передачи каких-либо файлом нужно обязательно указывать атрибут enctype="multipart/form-data"-->
+<form action="{% url 'add_page' %}" method="post" enctype="multipart/form-data">
+
+<!--    Тег csrf_token необходим для защиты от CSRF-атак-->
+    {% csrf_token %}
+
+
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+{% for f in form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+<!--    {{ form.as_p }} вызывает метод as_p нашей формы для отображения ее полей, используя теги абзацев <p>-->
+<!--    {{ form.as_p }}-->
+    <button type="submit">Добавить</button>
+</form>
+
+{% endblock %}
